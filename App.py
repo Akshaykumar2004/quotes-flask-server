@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from utils import quotes, secondary_emotion, primary_emotion
 import sqlite3 as lite
 import json
 
