@@ -11,7 +11,7 @@ last_quote_index = 0
 
 
 def create_connection():
-    return lite.connect(r'/home/ak/Desktop/Docs/Projects/Quotes-prototype/quotes.db')
+    return lite.connect(r'quotes.db')
 
 
 def store_quotes_in_db(conn, quotes):
