@@ -32,23 +32,30 @@ def register():
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
     return response
 
-
 # Login endpoint
 @app.route('/login', methods=['POST'])
 def login():
     time.sleep(1)
     data = request.get_json()
     print(data)
-    username = data['username']
+    username_or_email = data['username']
     password = data['password']
     conn = sqlite3.connect('./quotes.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM Users WHERE username=? AND password=?", (username, password))
+    
+    # First, try to find the user by username
+    c.execute("SELECT * FROM Users WHERE username=? AND password=?", (username_or_email, password))
     user = c.fetchone()
+    
+    # If not found, try to find the user by email
+    if not user:
+        c.execute("SELECT * FROM Users WHERE email=? AND password=?", (username_or_email, password))
+        user = c.fetchone()
+    
     conn.close()
     
     if user:
-        access_token = create_access_token(identity=username)
+        access_token = create_access_token(identity=user[1])  # Assuming user[1] is the username
         token = {"access_token": access_token}
         print(token)
         response_data = {'message': 'OK', 'token': token}
@@ -60,6 +67,7 @@ def login():
         response = jsonify(response_data)
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response, 401
+
     
 def create_connection():
     return sqlite3.connect('./quotes.db')
