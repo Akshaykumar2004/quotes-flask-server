@@ -219,6 +219,8 @@ def get_quote():
 
             # Remove the fetched quote from the database to avoid sending it again
             c.execute(f"DELETE FROM {current_user}_quotes WHERE user_id=? AND quote=?", (current_user, next_quote))
+            c.execute(f"INSERT INTO {current_user}_quotes (user_id, quote) VALUES (?, ?)", (current_user, next_quote))
+
             conn.commit()
             conn.close()
 
