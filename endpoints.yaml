@@ -1,0 +1,4 @@
+version=1.0
+name=quote-backend-app
+port=4444
+type=REST
